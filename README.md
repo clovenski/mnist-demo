@@ -7,6 +7,11 @@ A program that you can use to demo mnist handwritten digits with your own digits
 - run `model_training.py` to train a model and save it as `model.h5`
 - run `main.py` to run the program and press the 'q' key to exit
 
+Two windows should pop up:
+
+- Webcam Feed: data from webcam, along with region of interest rectangle and prediction on bottom left
+- Input to Model: the image that the model receives as input
+
 ## Environment
 
 My environment used to develop this project:
