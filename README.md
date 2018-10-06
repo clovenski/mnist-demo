@@ -26,3 +26,13 @@ My environment used to develop this project:
 ## Note
 
 This project is still a work in progress.
+
+## Examples
+
+![Alt text](examples/ex1_wf.png)
+
+![Alt text](examples/ex1_itm.png)
+
+![Alt text](examples/ex2_wf.png)
+
+![Alt text](examples/ex2_itm.png)
