@@ -18,9 +18,9 @@ cap.set(cv.CAP_PROP_FPS, 1.0)
 while cap.isOpened():
     # read a frame
     ret, frame = cap.read()
-    # ret probably indicates frame was properly read; check docs
+    # ret probably indicates frame was properly read; check opencv docs
     if ret == True:
-        # grayscale the frame
+        # grayscale the image
         gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
         # binary inverted threshold, to get black background and white for digit;
         # 70 is used for threshold, adjust to indicate how dark something needs
@@ -69,7 +69,7 @@ while cap.isOpened():
         roi_pt1 = (roi_x1, roi_y1)
         roi_pt2 = (roi_x2, roi_y2)
         # apply roi to webcam frame
-        cv.rectangle(gray, roi_pt1, roi_pt2, 0)
+        cv.rectangle(frame, roi_pt1, roi_pt2, 0)
 
         # downsample data_raw to 8x8 image, then upsample to 20x20 to
         # get gray values (<255) in image
@@ -97,10 +97,10 @@ while cap.isOpened():
         prediction = np.argmax(model.predict(data[np.newaxis,:,:,np.newaxis]))
 
         # put this prediction on the webcam feed image for display
-        cv.putText(gray, str(prediction), (0, gray.shape[0]-10), cv.FONT_HERSHEY_DUPLEX, 5, 0, 5)
+        cv.putText(frame, str(prediction), (0, gray.shape[0]-10), cv.FONT_HERSHEY_DUPLEX, 5, 0, 5)
 
         # show first window, showing webcam feed, along with prediciton and roi box
-        cv.imshow('Webcam Feed', gray)
+        cv.imshow('Webcam Feed', frame)
         # show second window, showing what the machine takes as an input
         cv.imshow('Input to Model', cv.resize(data, dsize=(0,0), fx=10, fy=10, interpolation=cv.INTER_AREA))
 
