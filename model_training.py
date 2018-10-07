@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+from __future__ import print_function
 import numpy as np
 import tensorflow as tf
 mnist = tf.keras.datasets.mnist

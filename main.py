@@ -1,10 +1,16 @@
 #!/usr/bin/python
 
+from __future__ import print_function
+import sys
 from math import ceil
 import numpy as np
 import cv2 as cv
 import tensorflow as tf
 from scipy import ndimage
+
+dev_mode = False
+if len(sys.argv) > 1 and sys.argv[1] == '-d':
+    dev_mode = True
 
 # load model saved by model_training.py
 model = tf.keras.models.load_model('model.h5')
@@ -71,12 +77,16 @@ while cap.isOpened():
         # apply roi to webcam frame
         cv.rectangle(frame, roi_pt1, roi_pt2, 0)
 
-        # downsample data_raw to 8x8 image, then upsample to 20x20 to
-        # get gray values (<255) in image
-        data = cv.resize(data_raw, (8, 8), interpolation=cv.INTER_AREA)
+        # get the dimensions of the digit (dim. of trimmed data)
+        digit_shape = (roi_x2 - roi_x1 - 10, roi_y2 - roi_y1 - 10)
+        if dev_mode:
+            print('digit_shape:', digit_shape)
+        # calculate how much to pad horizontally to make square shape
+        x_pad = max(0, digit_shape[1] - digit_shape[0]) // 2
+        # pad to make digit fit into a square shape
+        data = np.pad(data_raw, ((0,), (x_pad,)), mode='constant', constant_values=0.0)
+        # resize to 20x20
         data = cv.resize(data, (20, 20), interpolation=cv.INTER_AREA)
-        # normalize image to conform to what model is trained with
-        data = data / 255.0
 
         # pad the 4 outer rows/columns of data to get 28x28 image
         data = np.pad(data, 4, mode='constant', constant_values=0.0)
@@ -92,7 +102,9 @@ while cap.isOpened():
 
         # shift the image so that center of mass is at the center of image (14, 14)
         data = cv.warpAffine(data, M, (28, 28))
-
+        
+        # normalize image to conform to what model is trained with
+        data = data / 255.0
         # get model's prediction of the data
         prediction = np.argmax(model.predict(data[np.newaxis,:,:,np.newaxis]))
 
