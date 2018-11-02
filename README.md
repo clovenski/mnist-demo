@@ -29,6 +29,8 @@ This project is still a work in progress.
 
 ## Examples
 
+Note: images are outdated, but give a general idea of what to expect
+
 ![Alt text](examples/ex1_wf.png)
 
 ![Alt text](examples/ex1_itm.png)
