@@ -4,7 +4,7 @@ from __future__ import print_function
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-# from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
+from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
 
 mnist = tf.keras.datasets.mnist
 
@@ -15,8 +15,8 @@ x_train, x_test = x_train[:,:,:,np.newaxis], x_test[:,:,:,np.newaxis]
 
 train_idg = ImageDataGenerator(
     rescale=1./255,
-    rotation_range=90,
-    shear_range=20.0,
+    rotation_range=85,
+    shear_range=15.0,
     fill_mode='constant',
     cval=0)
 
@@ -38,28 +38,26 @@ model = tf.keras.models.Sequential([
     tf.keras.layers.Conv2D(32, 2, strides=1, padding='same', activation='relu'),
     tf.keras.layers.Conv2D(64, 2, strides=1, padding='same', activation='relu'),
     tf.keras.layers.Conv2D(64, 2, strides=1, padding='same', activation='relu'),
-    tf.keras.layers.MaxPooling2D(pool_size=2),
     tf.keras.layers.Flatten(),
     tf.keras.layers.Dense(64, activation='relu'),
     tf.keras.layers.Dense(64, activation='relu'),
     tf.keras.layers.Dense(64, activation='relu'),
-    tf.keras.layers.Dropout(0.40),
+    tf.keras.layers.Dropout(0.2),
     tf.keras.layers.Dense(32, activation='relu'),
     tf.keras.layers.Dense(10, activation='softmax')
 ])
 
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-# rlrop = ReduceLROnPlateau(monitor='val_loss', patience=1)
-# early_stop = EarlyStopping(monit='val_acc', patience=1)
+rlrop = ReduceLROnPlateau(monitor='val_loss', patience=2)
+early_stop = EarlyStopping(monitor='val_loss', patience=5)
 
 model.fit_generator(
     train_dg,
     steps_per_epoch=train_steps,
-    epochs=5,
+    epochs=50,
     validation_data=val_dg,
     validation_steps=val_steps,
-    # callbacks=[rlrop, early_stop]
-)
+    callbacks=[rlrop, early_stop])
 print(model.evaluate(x_test, y_test))
 model.save('model.h5')
