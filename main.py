@@ -92,6 +92,8 @@ while cap.isOpened():
             digit_height = digit_shape[1]
             digit_width = digit_shape[0]
 
+            # dilate the digit if it appeared big on the webcam; otherwise
+            # the digit becomes faint when resizing to a small image
             if digit_height > 200 or digit_width > 200:
                 data_raw = cv.dilate(data_raw, kernel=np.ones((3,3), np.uint8), iterations=7)
             elif digit_height > 100 or digit_width > 100:
@@ -132,7 +134,7 @@ while cap.isOpened():
         # show first window, showing webcam feed, along with prediciton and roi box
         cv.imshow('Webcam Feed', frame)
         # show second window, showing what the machine takes as an input
-        cv.imshow('Input to Model', cv.resize(data, dsize=(0,0), fx=17, fy=17, interpolation=cv.INTER_AREA))
+        cv.imshow('Input to Model', cv.resize(data, dsize=(0,0), fx=10, fy=10, interpolation=cv.INTER_AREA))
 
         # during runtime, hit the 'q' key to quit the program
         if cv.waitKey(1) & 0xFF == ord('q'):
