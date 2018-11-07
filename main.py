@@ -20,6 +20,8 @@ cap = cv.VideoCapture(1)
 # lower the framerate; although it doesn't seem to actually become 1 FPS
 cap.set(cv.CAP_PROP_FPS, 1.0)
 
+flip_image = False
+
 # while webcam source is still open
 while cap.isOpened():
     # read a frame
@@ -123,10 +125,19 @@ while cap.isOpened():
             
             # normalize image to conform to what model is trained with
             data = data / 255.0
+
+            # if True, flip the digit; for writing digits on other side of webcam's orientation
+            if flip_image:
+                data = cv.flip(data, -1)
+
             # get model's prediction of the data
             prediction = np.argmax(model.predict(data[np.newaxis,:,:,np.newaxis]))
         else:
             prediction = '?'
+
+        # flip the webcam feed if the digit was flipped as well
+        if flip_image:
+            frame = cv.flip(frame, -1)
 
         # put this prediction on the webcam feed image for display
         cv.putText(frame, str(prediction), (0, gray.shape[0]-10), cv.FONT_HERSHEY_DUPLEX, 5, 0, 5)
@@ -136,9 +147,13 @@ while cap.isOpened():
         # show second window, showing what the machine takes as an input
         cv.imshow('Input to Model', cv.resize(data, dsize=(0,0), fx=10, fy=10, interpolation=cv.INTER_AREA))
 
+        key = cv.waitKey(1) & 0xFF
         # during runtime, hit the 'q' key to quit the program
-        if cv.waitKey(1) & 0xFF == ord('q'):
+        if key == ord('q'):
             break
+        # during runtime, hit the 'f' key to flip the orientation of digit before sending it to model
+        elif key == ord('f'):
+            flip_image = not flip_image
     else:
         break
 

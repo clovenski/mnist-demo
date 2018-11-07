@@ -12,6 +12,8 @@ Two windows should pop up:
 - Webcam Feed: data from webcam, along with region of interest rectangle and prediction on bottom left
 - Input to Model: the image that the model receives as input
 
+Also, pressing the 'f' key will flip the webcam's orientation. This is for writing digits on the other side of a webcam (assuming the webcam is pointing down).
+
 ## Environment
 
 My environment used to develop this project:
