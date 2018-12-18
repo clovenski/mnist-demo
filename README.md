@@ -25,13 +25,9 @@ My environment used to develop this project:
 - TensorFlow 1.11.0
 - SciPy 1.1.0
 
-## Note
-
-This project is still a work in progress.
-
 ## Examples
 
-Note: images are outdated, but give a general idea of what to expect
+Note: images are <u>outdated</u> but give a general idea of what to expect
 
 ![Alt text](examples/ex1_wf.png)
 
